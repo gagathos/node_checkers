@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Node Checkers</title>
+		<script src="https://fb.me/react-15.1.0.js"></script>
+<script src="https://fb.me/react-dom-15.1.0.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script
+			  src="https://code.jquery.com/jquery-3.0.0.min.js"
+			  integrity="sha256-JmvOoLtYsmqlsWxa7mDSLMwa6dZ9rrIdtrrVYRnDRH0="
+			  crossorigin="anonymous"></script>
+  </head>
+  <style type="text/css">
+  	.space {
+  		height: 40px;
+  		width: 40px;
+  		background-color: #ccc;
+  		position: absolute;
+  	}
+  	.even {
+  		background-color: #333;
+  	}
+  	
+  	.piece {
+  		height: 40px;
+  		width: 40px;
+  		z-index: 100;
+  		position: absolute;
+  		background-image: url("red.png");
+  	}
+  	</style>
+  <body>
+    <div id="example"></div>
+    <script type="text/babel">
+   var Map = React.createClass({
+  getInitialState: function() {
+    	var obj = JSON.parse('{"map":{"board":[{"number":0,"x":0,"y":0},{"number":1,"x":0,"y":1},{"number":2,"x":0,"y":2},{"number":3,"x":0,"y":3},{"number":4,"x":0,"y":4},{"number":5,"x":0,"y":5},{"number":6,"x":0,"y":6},{"number":7,"x":0,"y":7},{"number":8,"x":1,"y":0},{"number":9,"x":1,"y":1},{"number":10,"x":1,"y":2},{"number":11,"x":1,"y":3},{"number":12,"x":1,"y":4},{"number":13,"x":1,"y":5},{"number":14,"x":1,"y":6},{"number":15,"x":1,"y":7},{"number":16,"x":2,"y":0},{"number":17,"x":2,"y":1},{"number":18,"x":2,"y":2},{"number":19,"x":2,"y":3},{"number":20,"x":2,"y":4},{"number":21,"x":2,"y":5},{"number":22,"x":2,"y":6},{"number":23,"x":2,"y":7},{"number":24,"x":3,"y":0},{"number":25,"x":3,"y":1},{"number":26,"x":3,"y":2},{"number":27,"x":3,"y":3},{"number":28,"x":3,"y":4},{"number":29,"x":3,"y":5},{"number":30,"x":3,"y":6},{"number":31,"x":3,"y":7},{"number":32,"x":4,"y":0},{"number":33,"x":4,"y":1},{"number":34,"x":4,"y":2},{"number":35,"x":4,"y":3},{"number":36,"x":4,"y":4},{"number":37,"x":4,"y":5},{"number":38,"x":4,"y":6},{"number":39,"x":4,"y":7},{"number":40,"x":5,"y":0},{"number":41,"x":5,"y":1},{"number":42,"x":5,"y":2},{"number":43,"x":5,"y":3},{"number":44,"x":5,"y":4},{"number":45,"x":5,"y":5},{"number":46,"x":5,"y":6},{"number":47,"x":5,"y":7},{"number":48,"x":6,"y":0},{"number":49,"x":6,"y":1},{"number":50,"x":6,"y":2},{"number":51,"x":6,"y":3},{"number":52,"x":6,"y":4},{"number":53,"x":6,"y":5},{"number":54,"x":6,"y":6},{"number":55,"x":6,"y":7},{"number":56,"x":7,"y":0},{"number":57,"x":7,"y":1},{"number":58,"x":7,"y":2},{"number":59,"x":7,"y":3},{"number":60,"x":7,"y":4},{"number":61,"x":7,"y":5},{"number":62,"x":7,"y":6},{"number":63,"x":7,"y":7}],"width":8,"height":8,"pieces":[{"team":1,"number":0,"currentX":0,"currentY":0},{"team":1,"number":1,"currentX":0,"currentY":2},{"team":2,"number":2,"currentX":0,"currentY":6},{"team":1,"number":3,"currentX":1,"currentY":0},{"team":1,"number":4,"currentX":1,"currentY":2},{"team":2,"number":5,"currentX":1,"currentY":6},{"team":1,"number":6,"currentX":2,"currentY":0},{"team":1,"number":7,"currentX":2,"currentY":2},{"team":2,"number":8,"currentX":2,"currentY":6},{"team":1,"number":9,"currentX":3,"currentY":0},{"team":1,"number":10,"currentX":3,"currentY":2},{"team":2,"number":11,"currentX":3,"currentY":6},{"team":1,"number":12,"currentX":4,"currentY":0},{"team":1,"number":13,"currentX":4,"currentY":2},{"team":2,"number":14,"currentX":4,"currentY":6},{"team":1,"number":15,"currentX":5,"currentY":0},{"team":1,"number":16,"currentX":5,"currentY":2},{"team":2,"number":17,"currentX":5,"currentY":6},{"team":1,"number":18,"currentX":6,"currentY":0},{"team":1,"number":19,"currentX":6,"currentY":2},{"team":2,"number":20,"currentX":6,"currentY":6},{"team":1,"number":21,"currentX":7,"currentY":0},{"team":1,"number":22,"currentX":7,"currentY":2},{"team":2,"number":23,"currentX":7,"currentY":6}]},"players":[]}');
+  		//console.log(obj);
+  		return obj;
+  },
+
+  componentDidMount: function() {
+    this.serverRequest = $.get("/?html=false", function (result) {
+      this.setState(result);
+    }.bind(this));
+  },
+
+  componentWillUnmount: function() {
+    this.serverRequest.abort();
+  },
+
+  render: function() {
+    var spaces =[];
+    var pieces = [];
+    
+    this.state.map.board.forEach(function(space){
+    	//console.log(space);
+    	spaces.push(<BoardSpace number={space.number} x={space.x} y={space.y} key={space.number} />);
+    });
+    this.state.map.pieces.forEach(function(piece){
+    //	console.log(piece);
+    
+    	pieces.push(<BoardPiece number={piece.number} team={piece.team} x={piece.currentX} y={piece.currentY} key={piece.number} />);
+    });
+    
+    var style = {
+    	'position' : 'relative',
+    	'height' : this.state.map.height * 40,
+    	'width' : this.state.map.width * 40,
+    }
+    return (
+      <div class="map" style={style}>
+       {spaces}
+       {pieces}
+      </div>
+    );
+  }
+});
+
+var BoardSpace = React.createClass({
+	render: function(){
+		
+		var classes = "space ";
+		if((Math.abs(this.props.x - this.props.y))%2 == 1) classes = classes + "even";
+		var style = coordsToStyle(this.props.x, this.props.y, 40);
+		//console.log(classes); 
+		return (
+	<div className={classes} x={this.props.x} y={this.props.y} style={style} number={this.props.number}> </div>
+		);
+	}
+	
+});
+
+var BoardPiece = React.createClass({
+	render: function(){
+		
+		var classes = "piece ";
+		var style = coordsToStyle(this.props.x, this.props.y, 40);
+		//console.log(classes); 
+		return (
+	<div className={classes} x={this.props.x} y={this.props.y} style={style} number={this.props.number}> </div>
+		);
+	}
+	
+});
+
+ReactDOM.render(
+  <Map />,
+  document.getElementById('example')
+);
+
+function coordsToStyle(x,y,resolution){
+	return {
+		"left" : x * resolution,
+			"top" : y * resolution,
+	};
+}
+
+    </script>
+  </body>
+</html>
