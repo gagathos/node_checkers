@@ -7,6 +7,8 @@ var gameState = {
 	players : [],
 }
 
+//Start HTTP Server
+
 http.createServer(function(req, res) {
 	console.log("Request received");
 	//we only want to serve game states from this script.  Front-end/web pages etc can be served from any other code, it doesn't matter.
@@ -48,6 +50,9 @@ http.createServer(function(req, res) {
 	console.log("Response sent");
 	}).listen(8124, "192.168.1.17");
 console.log('Server running at http://127.0.0.1:8124/');
+
+
+/* Classes */
 
 function gameBoard(width, height){
 	this.board = [];
