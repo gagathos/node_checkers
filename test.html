@@ -88,8 +88,13 @@ var BoardSpace = React.createClass({
 		if((Math.abs(this.props.x - this.props.y))%2 == 1) classes = classes + "even";
 		var style = coordsToStyle(this.props.x, this.props.y, 40);
 		//console.log(classes); 
+		//Use below code for debugging positions etc
+		/*return (
+	<div className={classes} x={this.props.x} y={this.props.y} style={style} number={this.props.number}>{this.props.number}<br />{this.props.x},{this.props.y} </div>
+		);
+		*/
 		return (
-	<div className={classes} x={this.props.x} y={this.props.y} style={style} number={this.props.number}> </div>
+	<div className={classes} x={this.props.x} y={this.props.y} style={style} number={this.props.number}></div>
 		);
 	}
 	

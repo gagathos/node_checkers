@@ -8,7 +8,7 @@ var gameState = {
 }
 
 //Start HTTP Server
-
+var ip = "192.168.1.18";
 http.createServer(function(req, res) {
 	console.log("Request received");
 	//we only want to serve game states from this script.  Front-end/web pages etc can be served from any other code, it doesn't matter.
@@ -48,8 +48,8 @@ http.createServer(function(req, res) {
 	break;
 	}
 	console.log("Response sent");
-	}).listen(8124, "127.0.0.1");
-console.log('Server running at http://127.0.0.1:8124/');
+	}).listen(8124, ip);
+console.log('Server running at http://'+ip+':8124/');
 
 
 /* Classes */
@@ -71,13 +71,13 @@ function gameBoard(width, height){
 	this.board.forEach((function(pieces){
 		
 		return function(value){
-		
-			if(value.number % 2 == 0){
-				//if it's in the top 3 rows
+			//only dark spots
+			if((Math.abs(value.x - value.y))%2 == 1){
+				//if it's in the bottom 3 rows
 				var length = pieces.length;
 				if(value.y >= height -3) pieces.push(new GamePiece(2,value.x,value.y,length ));
-				//if it's in the bottom 3 rows
-				if(value.y <= 3) pieces.push(new GamePiece(1, value.x, value.y, length));
+				//if it's in the top 3 rows (includes row 0)
+				if(value.y <= 2) pieces.push(new GamePiece(1, value.x, value.y, length));
 			}
 		}
 	})(this.pieces));
